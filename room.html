@@ -3,10 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Hotelier - Hotel HTML Template</title>
+    <title>Nyumbani Lodge</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
+    <meta content="lodge, hotel, restaurant, motel, weekend getaway, relaxation, Dar es Salaam" name="keywords">
+    <meta content="Discover tranquility at Nyumbani Lodge in Kivule, Dar es Salaam. A perfect blend of comfort and charm, offering a serene escape for weekends and relaxation." name="description">
+   
 
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
@@ -47,7 +48,7 @@
             <div class="row gx-0">
                 <div class="col-lg-3 bg-dark d-none d-lg-block">
                     <a href="index.html" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
-                        <h1 class="m-0 text-primary text-uppercase">Hotelier</h1>
+                        <h1 class="m-0 text-primary text-uppercase">NYUMBANI</h1>
                     </a>
                 </div>
                 <div class="col-lg-9">
@@ -55,11 +56,11 @@
                         <div class="col-lg-7 px-5 text-start">
                             <div class="h-100 d-inline-flex align-items-center py-2 me-4">
                                 <i class="fa fa-envelope text-primary me-2"></i>
-                                <p class="mb-0">info@example.com</p>
+                                <p class="mb-0">nyumbanilodge@gmail.com</p>
                             </div>
                             <div class="h-100 d-inline-flex align-items-center py-2">
                                 <i class="fa fa-phone-alt text-primary me-2"></i>
-                                <p class="mb-0">+012 345 6789</p>
+                                <p class="mb-0">+255 713 383 815</p>
                             </div>
                         </div>
                         <div class="col-lg-5 px-5 text-end">
@@ -74,35 +75,35 @@
                     </div>
                     <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
                         <a href="index.html" class="navbar-brand d-block d-lg-none">
-                            <h1 class="m-0 text-primary text-uppercase">Hotelier</h1>
+                            <h1 class="m-0 text-primary text-uppercase">NYUMBANI LODGE</h1>
                         </a>
                         <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="navbar-nav mr-auto py-0">
-                                <a href="index.html" class="nav-item nav-link">Home</a>
+                                <a href="index.html" class="nav-item nav-link ">Home</a>
                                 <a href="about.html" class="nav-item nav-link">About</a>
                                 <a href="service.html" class="nav-item nav-link">Services</a>
                                 <a href="room.html" class="nav-item nav-link active">Rooms</a>
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                                <a href="booking.html" class="nav-item nav-link">Booking</a>
+                                <!-- <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Booking</a>
                                     <div class="dropdown-menu rounded-0 m-0">
                                         <a href="booking.html" class="dropdown-item">Booking</a>
-                                        <a href="team.html" class="dropdown-item">Our Team</a>
-                                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                                       <a href="team.html" class="dropdown-item">Our Team</a> 
+                                       <a href="testimonial.html" class="dropdown-item">Testimonial</a> 
                                     </div>
-                                </div>
+                                </div> -->
                                 <a href="contact.html" class="nav-item nav-link">Contact</a>
                             </div>
-                            <a href="https://htmlcodex.com/hotel-html-template-pro" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">Premium Version<i class="fa fa-arrow-right ms-3"></i></a>
+                            <a href="booking.html" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">BOOKING<i class="fa fa-arrow-right ms-3"></i></a>
                         </div>
                     </nav>
                 </div>
             </div>
         </div>
         <!-- Header End -->
-
 
         <!-- Page Header Start -->
         <div class="container-fluid page-header mb-5 p-0" style="background-image: url(img/carousel-1.jpg);">
@@ -141,32 +142,36 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <select class="form-select">
-                                        <option selected>Adult</option>
-                                        <option value="1">Adult 1</option>
-                                        <option value="2">Adult 2</option>
-                                        <option value="3">Adult 3</option>
-                                    </select>
+                                    <div class="date" id="date2" data-target-input="nearest">
+                                        <select class="form-control" id="roomNumber" name="roomNumber">
+                                            <option>Select room</option>
+                                            <option value="1">DP 101</option>
+                                            <option value="2">DP 102</option>
+                                            <option value="3">DP 103</option>
+                                            <option value="4">DP 104</option>
+                                            <option value="5">DP 105</option>
+                                            <option value="6">KP 106</option>
+                                            <option value="7">DP 107</option>
+                                            <option value="8">DP 108</option>
+                                            <option value="9">DP 109</option>
+                                            <option value="10">DP 110</option>
+                                            <option value="11">DP 111</option>
+                                        </select>
+                                    </div>
+                                    
                                 </div>
-                                <div class="col-md-3">
-                                    <select class="form-select">
-                                        <option selected>Child</option>
-                                        <option value="1">Child 1</option>
-                                        <option value="2">Child 2</option>
-                                        <option value="3">Child 3</option>
-                                    </select>
-                                </div>
-                            </div>
+                            </div>    
+
+
                         </div>
                         <div class="col-md-2">
-                            <button class="btn btn-primary w-100">Submit</button>
+                            <button class="btn btn-primary w-100">CHECK AVAILABILITY</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Booking End -->
-
 
         <!-- Room Start -->
         <div class="container-xxl py-5">
