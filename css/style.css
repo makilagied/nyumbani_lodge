@@ -20,7 +20,15 @@
     bottom: 45px;
     z-index: 99;
 }
-
+.room-box {
+    width: 100px; /* Adjust the width as needed */
+    height: 100px; /* Adjust the height as needed */
+    border: 1px solid #ddd;
+    margin: 10px;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+}
 
 /*** Spinner ***/
 #spinner {
