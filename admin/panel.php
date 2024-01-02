@@ -137,6 +137,23 @@
     <title>Admin Panel</title>
 </head>
 <body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Nyumbani Lodge</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <span class="navbar-text mx-2 my-2 my-lg-0">Welcome, [Username]</span> <!-- Replace [Username] with the actual username -->
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-danger my-2 my-sm-0" onclick="logout()">Logout</button>
+            </li>
+        </ul>
+    </div>
+</nav>
 
 <div class="container admin-container">
     <div class="row">

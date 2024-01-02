@@ -47,7 +47,7 @@
         <div class="container-fluid bg-dark px-0">
             <div class="row gx-0">
                 <div class="col-lg-3 bg-dark d-none d-lg-block">
-                    <a href="index.html" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
+                    <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
                         <h1 class="m-0 text-primary text-uppercase">NYUMBANI</h1>
                     </a>
                 </div>
@@ -83,14 +83,14 @@
                         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                             <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                                 <div class="navbar-nav mr-auto py-0">
-                                    <a href="index.html" class="nav-item nav-link active">Home</a>
-                                    <a href="index.html#about" class="nav-item nav-link">About</a>
-                                    <a href="index.html#service" class="nav-item nav-link">Services</a>
-                                    <a href="index.html#room" class="nav-item nav-link">Rooms</a>
-                                    <a href="booking.html#booking" class="nav-item nav-link">Booking</a>
+                                    <a href="index.php" class="nav-item nav-link active">Home</a>
+                                    <a href="index.php#about" class="nav-item nav-link">About</a>
+                                    <a href="index.php#service" class="nav-item nav-link">Services</a>
+                                    <a href="index.php#room" class="nav-item nav-link">Rooms</a>
+                                    <a href="booking.php#booking" class="nav-item nav-link">Booking</a>
                                     <!-- <a href="contact.html" class="nav-item nav-link">Contact</a> -->
                                 </div>
-                                <a href="booking.html#booking" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">BOOKING<i class="fa fa-arrow-right ms-3"></i></a>
+                                <a href="booking.php#booking" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">BOOKING<i class="fa fa-arrow-right ms-3"></i></a>
                             </div>
                     </nav>
                 </div>
@@ -109,8 +109,8 @@
                             <div class="p-3" style="max-width: 700px;">
                                 <h6 class="section-title text-white text-uppercase mb-3 animated slideInDown">Nyumbani Lodge</h6>
                                 <h1 class="display-3 text-white mb-4 animated slideInDown">Discover A Brand Luxurious Lodge</h1>
-                                <a href="index.html#room" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Our Rooms</a>
-                                <a href="booking.html#booking" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Book A Room</a>
+                                <a href="index.php#room" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Our Rooms</a>
+                                <a href="booking.php#booking" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Book A Room</a>
                             </div>
                         </div>
                     </div>
@@ -120,8 +120,8 @@
                             <div class="p-3" style="max-width: 700px;">
                                 <h6 class="section-title text-white text-uppercase mb-3 animated slideInDown">Nyumbani Lodge</h6>
                                 <h1 class="display-3 text-white mb-4 animated slideInDown">Discover A Brand Luxurious Lodge</h1>
-                                <a href="index.html#room" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Our Rooms</a>
-                                <a href="booking.html#booking" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Book A Room</a>
+                                <a href="index.php#room" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Our Rooms</a>
+                                <a href="booking.php#booking" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Book A Room</a>
                             </div>
                         </div>
                     </div>
@@ -348,7 +348,7 @@
                                 <p class="text-body mb-3">Unwind in our Super Deluxe suite, a lavish and self-contained retreat complemented by free Wi-Fi, breakfast, and the added convenience of complimentary transport to and from the airport or any destination within 20km from our lodge.</p>
                                 <div class="d-flex justify-content-between">
                                     <a class="btn btn-sm btn-primary rounded py-2 px-4" href="#">View Detail</a>
-                                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="booking.html">Book Now</a>
+                                    <a class="btn btn-sm btn-dark rounded py-2 px-4" href="booking.php">Book Now</a>
                                 </div>
                             </div>
                         </div>
