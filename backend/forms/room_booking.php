@@ -17,9 +17,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sqlInsertVisitor = "INSERT INTO visitors (name, phone, check_in_date, check_out_date, room_number, payment_method, special_notes)
                          VALUES ('$name', '$phone', '$checkInDate', '$checkOutDate', '$roomNumber', '$paymentMethod', '$specialNotes')";
 
-    if ($connection->query($sqlInsertVisitor) === TRUE) {
-        echo "Visitor data inserted successfully";
-    } else {
+    // Update room status to 'occupied'
+    $sqlUpdateRoomStatus = "UPDATE rooms SET room_status = 'occupied' WHERE room_number = '$roomNumber'";
+
+    // Execute the queries
+    if ($connection->query($sqlInsertVisitor) === TRUE && $connection->query($sqlUpdateRoomStatus) === TRUE) {
+        // Display success message using JavaScript
+                // Display success message in a pop-up
+                echo "<script>alert('Visitor data inserted successfully');</script>";
+
+                // Redirect to room.php
+                echo "<script>window.location.href = '../../reception/room.php';</script>";
+                exit(); // Ensure script execution stops after the redirect
+         } else {
         echo "Error inserting visitor data: " . $connection->error;
     }
 }

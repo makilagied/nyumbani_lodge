@@ -31,6 +31,29 @@
 
     <!-- Template Stylesheet -->
     <link href="../css/style.css" rel="stylesheet">
+
+    <style>
+    .room-box {
+        border: 1px solid #000;
+        padding: 10px;
+        margin-bottom: 10px;
+        cursor: pointer; /* Change cursor to pointer for better UX */
+        width: 100%;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .room-box-empty {
+        background-color: #FEA116; /* Green for empty rooms */
+    }
+
+    .room-box-occupied {
+        background-color: #ff0000; /* Red for occupied rooms */
+    }
+</style>
+
 </head>
 
 <body>
@@ -84,18 +107,23 @@
                                     <div class="col-12">
                                         <div class="form-floating">
                                             <select class="form-select" id="select3" name='room'>
-                                                <option value="DP 101">DP 101</option>
-                                                <option value="DP 102">DP 102</option>
-                                                <option value="DP 103">DP 103</option>
-                                                <option value="DP 104">DP 104</option>
-                                                <option value="DP 105">DP 105</option>
-                                                <option value="KP 106">KP 106</option>
-                                                <option value="DP 107">DP 107</option>
-                                                <option value="DP 108">DP 108</option>
-                                                <option value="DP 109">DP 109</option>
-                                                <option value="DP 110">DP 110</option>
-                                                <option value="DP 111">DP 111</option>
-                                            </select>
+                                            <?php
+                                                // Include the database connection script
+                                                include '../backend/db_connection.php';
+                                                 // Fetch rooms from the database where status is empty
+                                                 $sqlSelectRooms = "SELECT room_number FROM rooms WHERE room_status = 'empty'";
+                                                 $result = $connection->query($sqlSelectRooms);
+
+                                                    if ($result->num_rows > 0) {
+                                                        while ($row = $result->fetch_assoc()) {
+                                                        $roomNumber = $row['room_number'];
+                                                        echo "<option value='$roomNumber'>$roomNumber</option>";
+                                                            }
+                                                         } else {
+                                                        echo "<option value='' disabled>No available rooms</option>";
+                                                            }
+                                              ?>                               
+                                             </select>
                                             <label for="select3">Select A Room</label>
                                           </div>
                                     </div>
@@ -124,45 +152,52 @@
 
                     <div class="col-lg-6">
                         <div class="row g-3">
-                            <div class="container">
-                                <h2 class="mt-5 mb-4">Rooms</h2>
-                                <div class="row">
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 101</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 102</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 103</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 104</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 105</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>KP 106</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 107</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 108</p>
-                                    </div>                                   
-                                     <div class="col-md-3 room-box">
-                                        <p>DP 109</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 110</p>
-                                    </div>
-                                    <div class="col-md-3 room-box">
-                                        <p>DP 111</p>
-                                    </div>
-                                   
-                                </div>
-                            </div>
+                        <?php
+// Include the database connection script
+include '../db_connection.php';
+
+// Fetch room data to determine their status
+$sqlFetchRooms = "SELECT room_number, room_status FROM rooms";
+$result = $connection->query($sqlFetchRooms);
+
+// Create an associative array to store room status
+$roomStatus = array();
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $roomStatus[$row['room_number']] = $row['room_status'];
+    }
+}
+?>
+
+<div class="container">
+    <h2 class="mt-5 mb-4">Rooms</h2>
+    <div class="row">
+        <?php
+        // Define room numbers
+        $roomNumbers = ["DP 101", "DP 102", "DP 103", "DP 104", "DP 105", "KP 106", "DP 107", "DP 108", "DP 109", "DP 110", "DP 111"];
+
+        // Loop through each room and display the corresponding button
+        foreach ($roomNumbers as $roomNumber) {
+            $roomColorClass = ($roomStatus[$roomNumber] == 'empty') ? 'room-box-empty' : 'room-box-occupied';
+        ?>
+              <div class="col-lg-3 col-md-4 col-sm-6">
+                <button class="room-box <?php echo $roomColorClass; ?>" onclick="handleRoomClick('<?php echo $roomNumber; ?>')">
+                    <?php echo $roomNumber; ?>
+                </button>
+            </div>
+        <?php
+        }
+        ?>
+    </div>
+</div>
+
+<script>
+    function handleRoomClick(roomNumber) {
+        // Handle the button click, e.g., open a modal or navigate to a page
+        alert('Room ' + roomNumber + ' clicked!');
+    }
+</script>
                         </div>
                     </div>
                 </div>
@@ -194,6 +229,41 @@
 
     <!-- Template Javascript -->
     <script src="../js/main.js"></script>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkinInput = document.getElementById("checkin");
+        const checkoutInput = document.getElementById("checkout");
+        const form = document.querySelector("form");
+
+        function validateDates() {
+            const checkinDate = new Date(checkinInput.value);
+            const checkoutDate = new Date(checkoutInput.value);
+
+            if (checkinDate >= checkoutDate) {
+                alert("Check-in date should be before Check-out date");
+                return false; // Prevent form submission
+            }
+
+            return true; // Allow form submission
+        }
+
+        function handleSubmit(event) {
+            if (!validateDates()) {
+                event.preventDefault(); // Prevent form submission
+            }
+            // Additional form submission logic
+        }
+
+        checkinInput.addEventListener("change", validateDates);
+        checkoutInput.addEventListener("change", validateDates);
+
+        form.addEventListener("submit", handleSubmit);
+    });
+</script>
+
+
 </body>
 
 </html>
