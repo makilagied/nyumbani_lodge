@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,14 +77,14 @@
     <div class="row">
         <div class="col-md-6 offset-md-3 login-box">
         <h1 class="mb-5">Nyumbani <span class="text-primary text-uppercase">LODGE</span></h1>        
-            <form>
+            <form action='../backend/backend_login.php' method='POST'>
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                    <input type="text" class="form-control" id="username" placeholder="Enter your username" name='username' required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" name='password' required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
             </form>

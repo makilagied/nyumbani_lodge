@@ -1,5 +1,19 @@
 <!DOCTYPE html>
+<?php
+// Include the database connection script
+include '../backend/db_connection.php';
 
+// Start a session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: ../auth/login.php");
+    exit();
+}
+
+?>
 
 <html lang="en">
 
@@ -67,7 +81,17 @@
             </div>
         </div>
         <!-- Spinner End -->
-
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> 
+        <?php
+                    // Check if the username is set in the session
+                    if (isset($_SESSION['username'])) {
+                        $username = $_SESSION['username'];
+                        echo '<span class="navbar-text d-flex align-items-center mx-2 my-2 my-lg-0">Welcome, ' . $username . '</span>';
+                    }
+                ?>
+                <button class="btn btn-danger my-2 my-sm-0" onclick="logout()">Logout</button>
+            
+                </nav>
 
         <!-- Booking Start -->
         <div class="container-xxl py-5" id="booking">
@@ -317,7 +341,13 @@ if ($result->num_rows > 0) {
 
         form.addEventListener("submit", handleSubmit);
     });
+
+    function logout() {
+        // Redirect to ../backend/logout.php
+        window.location.href = '../backend/logout.php';
+    }
 </script>
+
 
 
 </body>
