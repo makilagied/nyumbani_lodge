@@ -7,13 +7,24 @@ include '../backend/db_connection.php';
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
     // Redirect to the login page if not logged in
     header("Location: ../auth/login.php");
     exit();
 }
 
+// Check if the logged-in user has the required role
+$requiredRole = 'receptionist';  // Change this to your required role
+if ($_SESSION['role'] !== $requiredRole) {
+    // Redirect to a forbidden page if the role is not correct
+    header("Location: ../auth/login.php");
+    exit();
+}
+
+// You can include additional checks based on user ID or any other criteria here
+
 ?>
+
 
 <html lang="en">
 
@@ -156,8 +167,8 @@ if (!isset($_SESSION['user_id'])) {
                                     <div class="col-12">
                                         <div class="form-floating">
                                             <select class="form-select" id="select3" name='payment'>
-                                                <option value="Cash">Cash</option>
-                                                <option value="Mobile">Mobile Transaction</option>
+                                                <option value="Cash">Short Time</option>
+                                                <option value="Mobile">Full Time</option>
                                             </select>
                                             <label for="select3">Payment Method</label>
                                           </div>
@@ -254,7 +265,7 @@ if ($result->num_rows > 0) {
             <p>Room Number: ${roomDetails.roomNumber}</p>
             <p>Visitor Name: ${roomDetails.visitorName}</p>
             <p>Check-in Date: ${roomDetails.checkInDate}</p>
-            <p>Check-out Date Method: ${roomDetails.checkOutDate}</p>
+            <p>Check-out Date: ${roomDetails.checkOutDate}</p>
             <button class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" onclick="handleCheckOut('${roomDetails.roomNumber}')">Check Out</button>
         `;
 

@@ -76,8 +76,8 @@ if ($connection->query($sqlCreateRoomsTable) === TRUE) {
 // Insert sample data for users (if not already inserted)
 $sqlInsertSampleUsers = "
 INSERT IGNORE INTO users (username, password_hash, role) VALUES
-('admin', '" . password_hash('admin_password', PASSWORD_DEFAULT) . "', 'admin'),
-('receptionist', '" . password_hash('receptionist_password', PASSWORD_DEFAULT) . "', 'receptionist')
+('admin', '" . password_hash('admin123', PASSWORD_DEFAULT) . "', 'admin'),
+('reception', '" . password_hash('reception123', PASSWORD_DEFAULT) . "', 'receptionist')
 ";
 if ($connection->query($sqlInsertSampleUsers) === TRUE) {
     echo "Sample users inserted successfully\n";

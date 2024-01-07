@@ -9,6 +9,6 @@ $_SESSION = array();
 session_destroy();
 
 // Redirect to the login page
-header("Location: ../reception/room.php");
+header("Location: ../auth/login.php");
 exit();
 ?>

@@ -1,300 +1,423 @@
 <!DOCTYPE html>
+<?php
+// Include the database connection script
+include '../backend/db_connection.php';
+
+// Start a session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
+    // Redirect to the login page if not logged in
+    header("Location: ../auth/login.php");
+    exit();
+}
+
+// Check if the logged-in user has the required role
+$requiredRole = 'admin';  // Change this to your required role
+if ($_SESSION['role'] !== $requiredRole) {
+    // Redirect to a forbidden page if the role is not correct
+    header("Location: ../auth/login.php");
+    exit();
+}
+
+// You can include additional checks based on user ID or any other criteria here
+
+?>
+
+?>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Your existing CSS styles */
-        :root {
-            --primary: #FEA116;
-            --light: #F1F8FF;
-            --dark: #0F172B;
-        }
-
-        .fw-medium {
-            font-weight: 500 !important;
-        }
-
-        .fw-semi-bold {
-            font-weight: 600 !important;
-        }
-
-        /* Additional styles for the admin panel */
-        body {
-            background-color: var(--light);
-        }
-
-        .admin-container {
-            margin-top: 50px;
-        }
-
-        .admin-box {
-            max-width: 800px;
-            margin: auto;
-            background: #FFFFFF;
-            padding: 30px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .admin-box h2 {
-            text-align: center;
-            color: var(--dark);
-        }
-
-        .admin-item {
-            margin-bottom: 20px;
-        }
-
-        .admin-item h4 {
-            color: var(--dark);
-        }
-
-        .admin-item p {
-            color: var(--dark);
-        }
-
-        .admin-item .btn {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .admin-item .btn:hover {
-            background-color: var(--dark);
-            border-color: var(--dark);
-        }
-
-        .filter-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .filter-container label {
-            margin-right: 10px;
-        }
-
-        .room-status-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .room-status-box {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-            cursor: pointer;
-        }
-
-        .report-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .report-container label {
-            margin-right: 10px;
-        }
-
-        .report-container select {
-            margin-right: 10px;
-        }
-
-        /* New styles for the report */
-        @media print {
-            body {
-                visibility: hidden;
-            }
-
-            .report-container {
-                visibility: visible;
-            }
-
-            .report {
-                width: 210mm;
-                height: 297mm;
-                margin: auto;
-                padding: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                background-color: #FFFFFF;
-            }
-
-            .report h5 {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-
-            .report ul {
-                list-style: none;
-                padding: 0;
-            }
-
-            .report li {
-                margin-bottom: 10px;
-            }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <!-- Bootstrap CSS link (make sure to include this in your project) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+    body {
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    #navbar {
+        background-color: #333;
+        color: #fff;
+        height: 100vh;
+        width: 200px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        overflow-x: hidden;
+        padding-top: 20px;
+    }
+
+    #navbar a {
+        padding: 15px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #fff;
+        display: block;
+        transition: background-color 0.3s ease;
+    }
+
+    #navbar a:hover {
+        background-color: #555;
+    }
+
+    #topbar {
+        background-color: #555;
+        color: #fff;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 200px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #topbar:hover {
+        background-color: #777;
+    }
+
+    #topbar span {
+        margin-right: 20px;
+    }
+
+    #content {
+        margin-top: 60px;
+        margin-left: 200px;
+        padding: 20px;
+        width: calc(100% - 200px); /* Adjust the width to leave space for the sidebar */
+        box-sizing: border-box;
+        overflow: hidden; /* Prevent scrolling */
+    }
+
+    .content-section {
+        display: none; /* Hide all content sections by default */
+    }
+
+    .content-section.active {
+        display: block; /* Display the active content section */
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: 0; /* Remove iframe border */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .no-data {
+        text-align: center;
+        margin-top: 20px;
+        color: #999;
+    }
+
+    #lodgeView {
+        display: none;
+        padding: 20px;
+        border: 1px solid #ddd;
+        margin-top: 20px;
+    }
+
+    #lodgeView.active {
+        display: block;
+    }
+
+    #filterForm {
+        margin-bottom: 20px;
+    }
+
+    label {
+        margin-right: 10px;
+    }
+
+    input, select, button {
+        margin-bottom: 10px;
+    }
+
+    button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #loadingOverlay {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        background-color: rgba(255, 255, 255, 0.8);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    #loadingText {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    #filteredData {
+        margin-top: 20px;
+    }
+
+    .no-data {
+        text-align: center;
+        margin-top: 20px;
+        color: #999;
+    }
+
+    /* Form Container */
+#filterForm {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Form Heading */
+h1 {
+    text-align: center;
+    color: #007bff;
+}
+
+/* Form Labels */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Form Select */
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+/* Form Date Filters Container */
+#dateFilters {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Form Date Input */
+input[type="date"] {
+    width: 48%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+/* Form Submit Button */
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+</style>
+
 </head>
 <body>
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Nyumbani Lodge</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <span class="navbar-text mx-2 my-2 my-lg-0">Welcome, [Username]</span> <!-- Replace [Username] with the actual username -->
-            </li>
-            <li class="nav-item">
-                <button class="btn btn-danger my-2 my-sm-0" onclick="logout()">Logout</button>
-            </li>
-        </ul>
-    </div>
-</nav>
 
-<div class="container admin-container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2 admin-box">
-            <h2>Admin Panel</h2>
-
-            <div class="room-status-container">
-                <h4>Live Room Status</h4>
-                <div id="roomStatus"></div>
-            </div>
-
-            <div class="admin-item">
-                <h4>Room Report</h4>
-                <label for="roomSelector">Select Room:</label>
-                <select id="roomSelector">
-                    <option value="1">Room 1</option>
-                    <option value="2">Room 2</option>
-                    <option value="3">Room 3</option>
-                    <!-- Add more room options as needed -->
-                </select>
-                <label for="timeFilter">Select Time Range:</label>
-                <select id="timeFilter">
-                    <option value="day">Day</option>
-                    <option value="week">Week</option>
-                    <option value="month">Month</option>
-                </select>
-                <button class="btn btn-primary" onclick="generateRoomReport()">Generate Report</button>
-
-                <div id="roomReportContainer" class="report-container">
-                    <!-- Room report content will be displayed here -->
-                </div>
-            </div>
-        </div>
+<div id="topbar" class="bg-dark text-light p-2" onclick="loadContent('home')">
+    <span class="mr-4">NYUMBANI BUSINESS INFORMATION SYSTEM</span>
+    <div>
+        <span><i class="bi bi-person"></i> Profile</span>
+        <span><i class="bi bi-gear"></i> Settings</span>
+        <span><i class="bi bi-person-plus"></i> Manage Users</span>
+        <button class="btn btn-danger my-2 my-sm-0" onclick="logout()">Logout</button>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<div id="navbar" class="bg-dark text-light">
+    <a href="#" onclick="loadContent('lodge')">Lodge</a>
+    <a href="#" onclick="loadContent('bar')">Bar</a>
+    <a href="#" onclick="loadContent('dukani')">Dukani</a>
+    <a href="#" onclick="loadContent('barbershop')">Barbershop</a>
+    <a href="#" onclick="loadContent('saloon')">Saloon</a>
+</div>
+
+<div id="content">
+
+    <div id="lodgeView" class="content-section active">
+        <!-- Lodge View content -->
+        <h1>Nyumbani Lodge Reports</h1>
+        <form id="filterForm">
+            <label for="filterType">Filter Type:</label>
+            <select name="filterType" id="filterType">
+                <option value="current">Current Occupied Rooms</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">In date range</option>
+                <option value="monthly">From Date to Today</option>
+            </select>
+
+            <div id="dateFilters">
+                <label for="start_date">Start Date:</label>
+                <input type="date" name="start_date" id="start_date">
+
+                <label for="end_date">End Date:</label>
+                <input type="date" name="end_date" id="end_date">
+            </div>
+
+            <button type="submit">Apply Filters</button>
+        </form>
+        <div id="loadingOverlay" style="display:none;">
+            <span id="loadingText">Loading...</span>
+        </div>
+        <div id="filteredData"></div>
+    </div>
+
+    <div id="barView" class="content-section">
+        <!-- Bar View content -->
+        <!-- ... -->
+    </div>
+
+    <div id="dukaniView" class="content-section">
+        <!-- Dukani View content -->
+        <!-- ... -->
+    </div>
+
+    <div id="barbershopView" class="content-section">
+        <!-- Barbershop View content -->
+        <!-- ... -->
+    </div>
+
+    <div id="saloonView" class="content-section">
+        <!-- Saloon View content -->
+        <!-- ... -->
+    </div>
+
+</div>
+
+<!-- Bootstrap JS and Popper.js (make sure to include these in your project) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <script>
-    // Simulated room data
-    var rooms = Array.from({ length: 11 }, (_, index) => ({ id: index + 1, visits: [] }));
-
-    function updateRoomStatus() {
-        var roomStatusHTML = rooms.map(room => {
-            var lastVisit = room.visits.length > 0 ? room.visits[room.visits.length - 1] : null;
-            var statusColor = lastVisit && lastVisit.status === 'occupied' ? 'red' : 'green';
-            return `<div class="room-status-box" style="border-color: ${statusColor};" onclick="showRoomReport(${room.id})">
-                        Room ${room.id}: ${lastVisit ? lastVisit.status : 'empty'}
-                    </div>`;
-        }).join('');
-
-        document.getElementById('roomStatus').innerHTML = roomStatusHTML;
-    }
-
-    function showRoomReport(roomId) {
-        // Display the selected room in the report container
-        var reportContainer = document.getElementById('roomReportContainer');
-        reportContainer.innerHTML = `<h5>Room Details for Room ${roomId}</h5>`;
-
-        // Save the selected room ID in a data attribute for later use
-        reportContainer.setAttribute('data-room-id', roomId);
-    }
-
-    function generateRoomReport() {
-        // Get the selected room ID from the data attribute
-        var roomId = document.getElementById('roomReportContainer').getAttribute('data-room-id');
-
-        // Simulate data generation (replace with actual server-side logic)
-        var reportData = generateSampleData(roomId);
-
-        // Filter the report data based on the selected time range
-        var selectedFilter = document.getElementById('timeFilter').value;
-        var filteredReportData = reportData.filter(roomReport => {
-            var currentDate = new Date();
-            var reportDate = new Date(roomReport.date);
-            if (selectedFilter === 'day') {
-                return currentDate.toDateString() === reportDate.toDateString();
-            } else if (selectedFilter === 'week') {
-                var startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
-                var endOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (6 - currentDate.getDay()));
-                return reportDate >= startOfWeek && reportDate <= endOfWeek;
-            } else if (selectedFilter === 'month') {
-                return currentDate.getMonth() === reportDate.getMonth();
-            }
-            return false;
+    function loadContent(category) {
+        // Hide all content sections
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
         });
 
-        // Display the filtered report in the report container
-        var reportResult = `
-            <div class="report">
-                <h5>Room Details for Room ${roomId} (${selectedFilter} filter)</h5>
-                <ul>
-                    ${filteredReportData.map(roomReport => `
-                        <li>
-                            <strong>Date:</strong> ${roomReport.date}
-                            <strong>Status:</strong> ${roomReport.status}
-                        </li>
-                    `).join('')}
-                </ul>
-            </div>
-        `;
-        document.getElementById('roomReportContainer').innerHTML = reportResult;
+        // Show the selected content section
+        document.getElementById(`${category}View`).classList.add('active');
     }
 
-    // Initial update of room status
-    updateRoomStatus();
+    document.getElementById('filterForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        showLoadingOverlay();
 
-    // Simulated function to generate sample data for a room
-    function generateSampleData(roomId) {
-        var currentDate = new Date();
-        var startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        // Make an AJAX request to the PHP script using Fetch API
+        var formData = new FormData(this);
+        fetch('lodge_view.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoadingOverlay();
 
-        // Generate sample data for the past month
-        var reportData = [];
-        for (var i = 0; i < 30; i++) {
-            var date = new Date(startDate);
-            date.setDate(startDate.getDate() + i);
-
-            var status = 'empty';
-            if (Math.random() > 0.5) {
-                status = 'occupied';
+            if (data.status === 'success') {
+                displayFilteredData(data.data);
+            } else {
+                console.error('Error:', data.message);
             }
+        })
+        .catch(error => {
+            hideLoadingOverlay();
+            console.error('Error:', error);
+        });
+    });
 
-            reportData.push({
-                date: date.toLocaleDateString(),
-                status: status
-            });
-        }
+    function showLoadingOverlay() {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    }
 
-        // Update the room visits with the sample data
-        var room = rooms.find(room => room.id === parseInt(roomId));
-        room.visits = reportData;
+    function hideLoadingOverlay() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
 
-        // Update room status display
-        updateRoomStatus();
+    function displayFilteredData(data) {
+    var tableHtml = "<h2>Filtered Data</h2>";
 
-        return reportData;
+    if (data.length > 0) {
+        tableHtml += "<table border='1'>" +
+            "<tr><th>Room Number</th><th>Visitor Name</th><th>Payment</th><th>Check-in Date</th><th>Check-out Date</th></tr>";
+
+        data.forEach(function (row) {
+            tableHtml += "<tr>" +
+                "<td>" + row.room_id + "</td>" +
+                "<td>" + row.visitor_name + "</td>" +
+                "<td>" + row.payment_method + "</td>" +
+                "<td>" + row.check_in_date + "</td>" +
+                "<td>" + row.check_out_date + "</td>" +
+                "</tr>";
+        });
+
+        tableHtml += "</table>";
+    } else {
+        tableHtml += "<p>No data found.</p>";
+    }
+
+    document.getElementById('filteredData').innerHTML = tableHtml;
+}
+
+function logout() {
+        // Redirect to ../backend/logout.php
+        window.location.href = '../backend/logout.php';
     }
 </script>
 
 </body>
 </html>
+

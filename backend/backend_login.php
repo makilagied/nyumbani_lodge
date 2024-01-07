@@ -21,16 +21,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
 
-            // Redirect to the dashboard or another secured page
-            header("Location: ../reception/room.php");
+            // Redirect based on user role
+            if ($_SESSION['role'] == 'admin') {
+                header("Location: ../admin/panel.php");
+            } elseif ($_SESSION['role'] == 'receptionist') {
+                header("Location: ../reception/room.php");
+            } else {
+                // Add more roles as needed
+                // header("Location: ...");
+            }
             exit();
         } else {
             // Invalid username or password
-            echo "<script>alert('Invalid username'); window.location.href = '../reception/room.php';</script>";
+            echo "<script>alert('Invalid username or password'); window.location.href = '../auth/login.php';</script>";
         }
     } else {
         // Invalid username or password
-        echo "<script>alert('User not found'); window.location.href = '../reception/room.php';</script>";
+        echo "<script>alert('User not found'); window.location.href = '../auth/login.php';</script>";
     }
 }
 ?>
