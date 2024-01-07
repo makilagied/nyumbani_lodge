@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+
+
 <html lang="en">
 
 <head>
@@ -78,7 +80,7 @@
 
                     <div class="col-lg-6">
                         <div class="wow fadeInUp" data-wow-delay="0.2s">
-                            <form action="../backend/forms/room_booking.php" method='POST'>
+                            <form action="../backend/rooms/room_booking.php" method='POST'>
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="form-floating">
@@ -94,13 +96,13 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating date" id="date3" data-target-input="nearest">
-                                            <input type="date" class="form-control datetimepicker-input" id="checkin" placeholder="Check In" data-target="#date3" data-toggle="datetimepicker"  name='checkin'/>
+                                            <input type="datetime-local" class="form-control datetimepicker-input" id="checkin" placeholder="Check In" data-target="#date3" data-toggle="datetimepicker"  name='checkin'/>
                                             <label for="checkin">Check In</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating date" id="date4" data-target-input="nearest">
-                                            <input type="date" class="form-control datetimepicker-input" id="checkout" placeholder="Check Out" data-target="#date4" data-toggle="datetimepicker" name='checkout'/>
+                                            <input type="datetime-local" class="form-control datetimepicker-input" id="checkout" placeholder="Check Out" data-target="#date4" data-toggle="datetimepicker" name='checkout'/>
                                             <label for="checkout">Check Out</label>
                                         </div>
                                     </div>
@@ -172,13 +174,12 @@ if ($result->num_rows > 0) {
 
 <div class="container">
     <h2 class="mt-5 mb-4">Rooms</h2>
+    <div id="roomDetails"></div>
     <div class="row">
+    
         <?php
-        // Define room numbers
-        $roomNumbers = ["DP 101", "DP 102", "DP 103", "DP 104", "DP 105", "KP 106", "DP 107", "DP 108", "DP 109", "DP 110", "DP 111"];
-
         // Loop through each room and display the corresponding button
-        foreach ($roomNumbers as $roomNumber) {
+        foreach (array_keys($roomStatus) as $roomNumber) {
             $roomColorClass = ($roomStatus[$roomNumber] == 'empty') ? 'room-box-empty' : 'room-box-occupied';
         ?>
               <div class="col-lg-3 col-md-4 col-sm-6">
@@ -192,12 +193,67 @@ if ($result->num_rows > 0) {
     </div>
 </div>
 
+
+    </div>
+</div>
+
+<!-- Add an empty div to display room details -->
+
+
 <script>
     function handleRoomClick(roomNumber) {
-        // Handle the button click, e.g., open a modal or navigate to a page
-        alert('Room ' + roomNumber + ' clicked!');
+        // Fetch room details using AJAX
+        fetchRoomDetails(roomNumber);
+    }
+
+    function fetchRoomDetails(roomNumber) {
+        // Use AJAX to fetch data from the server
+        fetch(`../backend/rooms/get_room_details.php?room=${roomNumber}`)
+            .then(response => response.json())
+            .then(data => {
+                // Display room details if the room is not empty
+                if ('message' in data && data.message === 'This room is empty') {
+                    alert('This room is empty');
+                } else {
+                    displayRoomDetails(data);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching room details:', error);
+            });
+    }
+
+    function displayRoomDetails(roomDetails) {
+        // Construct HTML for displaying room details
+        const roomDetailsHtml = `
+            <h2 class="text-primary text-uppercase">Visitor Details</h2>
+            <p>Room Number: ${roomDetails.roomNumber}</p>
+            <p>Visitor Name: ${roomDetails.visitorName}</p>
+            <p>Check-in Date: ${roomDetails.checkInDate}</p>
+            <p>Check-out Date Method: ${roomDetails.checkOutDate}</p>
+            <button class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft" onclick="handleCheckOut('${roomDetails.roomNumber}')">Check Out</button>
+        `;
+
+        // Display room details in the designated div
+        document.getElementById('roomDetails').innerHTML = roomDetailsHtml;
+    }
+
+    function handleCheckOut(roomNumber) {
+        // Use AJAX to inform the server about the check-out
+        fetch(`../backend/rooms/check_out.php?room=${roomNumber}`)
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                // Reload the page or perform additional actions as needed
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error checking out:', error);
+            });
     }
 </script>
+
+
                         </div>
                     </div>
                 </div>
