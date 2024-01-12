@@ -167,8 +167,8 @@ if ($_SESSION['role'] !== $requiredRole) {
                                     <div class="col-12">
                                         <div class="form-floating">
                                             <select class="form-select" id="select3" name='payment'>
-                                                <option value="Cash">Short Time</option>
-                                                <option value="Mobile">Full Time</option>
+                                                <option value="Short Time">Short Time</option>
+                                                <option value="Full Time">Full Time</option>
                                             </select>
                                             <label for="select3">Payment Method</label>
                                           </div>
